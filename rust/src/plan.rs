@@ -1,5 +1,5 @@
 use arrow::datatypes::Schema;
-use datafusion::logicalplan::LogicalPlan;
+use crate::logicalplan::LogicalPlan;
 
 #[derive(Debug, Clone)]
 pub enum Action {

@@ -14,3 +14,4 @@ pub mod error;
 pub mod plan;
 pub mod serde;
 pub mod utils;
+pub mod logicalplan;

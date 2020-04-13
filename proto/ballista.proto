@@ -7,8 +7,6 @@ option java_package = "org.ballistacompute.protobuf";
 option java_outer_classname = "BallistaProto";
 
 message Action {
-  // meta-data for files to be registered as tables
-  repeated TableMeta table_meta = 1;
   LogicalPlanNode query = 2;
 }
 
@@ -67,11 +65,13 @@ message LogicalPlanNode {
 }
 
 message ScanNode {
-  string table_name = 1;
+  string path = 1;
   repeated string projection = 2;
 
-  //TODO should not really need this since the schema comes from the registered data sources in the context
+  // optional schema (for CSV files)
   Schema schema = 3;
+
+  bool csv_has_header = 10;
 }
 
 message ProjectionNode {
@@ -105,21 +105,6 @@ message Field {
 message Schema {
   repeated Field columns = 1;
 }
-
-message TableMeta {
-  string table_name = 1;
-  string filename = 2;
-
-  CsvFileMeta csv_meta = 10;
-  //TODO parquet
-
-}
-
-message CsvFileMeta {
-  bool has_header = 1;
-  Schema schema = 2;
-}
-
 
 // copied from GandivaType from Apache Arrow project
 enum ArrowType {

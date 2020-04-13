@@ -6,7 +6,7 @@ import org.ballistacompute.{logical => ballista}
 
 import scala.collection.JavaConverters._
 
-class BallistaSparkContext(spark: SparkSession, val tables: Map[String,String]) {
+class BallistaSparkContext(spark: SparkSession) {
 
   /** Translate Ballista logical plan step into a DataFrame transformation */
   def createDataFrame(plan: ballista.LogicalPlan, input: Option[DataFrame]): DataFrame = {
@@ -15,7 +15,8 @@ class BallistaSparkContext(spark: SparkSession, val tables: Map[String,String]) 
 
       case s: ballista.Scan =>
         assert(input.isEmpty)
-        val df = spark.read.csv(tables(s.getName))
+        //TODO: schema, has_header
+        val df = spark.read.csv(s.getPath)
         val projection: Seq[String] = s.getProjection().asScala
         if (projection.isEmpty) {
           df

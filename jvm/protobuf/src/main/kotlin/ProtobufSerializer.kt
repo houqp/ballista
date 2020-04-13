@@ -16,10 +16,11 @@ class ProtobufSerializer {
                 val ds = plan.dataSource
                 when (ds) {
                     is CsvDataSource -> {
+                        //TODO schema, has_header
                         LogicalPlanNode
                                 .newBuilder()
                                 .setScan(ScanNode.newBuilder()
-                                        .setTableName(plan.name)
+                                        .setPath(plan.path)
                                         .addAllProjection(plan.projection)
                                         .build())
                                 .build()

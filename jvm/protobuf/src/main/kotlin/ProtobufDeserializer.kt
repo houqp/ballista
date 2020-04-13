@@ -4,15 +4,14 @@ import org.ballistacompute.datasource.CsvDataSource
 import org.ballistacompute.logical.*
 import java.lang.RuntimeException
 
-//TODO should not need to pass tables here, need to remove DataSource from logical plan
-class ProtobufDeserializer(val tables: Map<String, String>) {
+class ProtobufDeserializer {
 
     fun fromProto(node: LogicalPlanNode): LogicalPlan {
         return if (node.hasScan()) {
-            val tableName = node.scan.tableName
-            val filename = tables.get(tableName) ?: throw IllegalStateException("No table named $tableName")
-            val ds = CsvDataSource(filename, 1024)
-            Scan(tableName, ds, node.scan.projectionList.asByteStringList().map { it.toString() })
+            //TODO schema, has_header
+            val scan = node.scan
+            val ds = CsvDataSource(scan.path, 1024)
+            Scan(scan.path, ds, scan.projectionList.asByteStringList().map { it.toString() })
         } else if (node.hasSelection()) {
             Selection(fromProto(node.input),
                     fromProto(node.selection.expr))

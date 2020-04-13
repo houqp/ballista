@@ -25,8 +25,8 @@ class ParquetDataSource(private val filename: String) : DataSource {
         }
     }
 
-    override fun scan(columns: List<String>): Sequence<RecordBatch> {
-        return ParquetScan(filename, columns)
+    override fun scan(projection: List<String>): Sequence<RecordBatch> {
+        return ParquetScan(filename, projection)
     }
 
 }
@@ -92,7 +92,7 @@ class ParquetIterator(private val reader: ParquetFileReader, private val project
         val columnIO = ColumnIOFactory().getColumnIO(schema)
         val recordReader: RecordReader<Group> = columnIO.getRecordReader(pages, GroupRecordConverter(schema))
         for (rowIndex in 0 until rows) {
-            val group: Group = recordReader.read()
+            //val group: Group = recordReader.read()
             for (projectionIndex in 0 until projectedColumns.size) {
 //                val primitiveTypeName = projectedArrowSchema.fields[fieldIndex].type.primitiveTypeName
 //                println("column $fieldIndex : $primitiveTypeName")
