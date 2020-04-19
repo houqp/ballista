@@ -2,7 +2,11 @@ use std::pin::Pin;
 
 use ballista::logicalplan::translate_plan;
 use ballista::serde::decode_protobuf;
+use ballista::execution::{DataExec, ProjectionExec};
 use ballista::{plan, BALLISTA_VERSION};
+
+use async_stream::stream;
+
 
 use datafusion::execution::context::ExecutionContext;
 
@@ -11,6 +15,7 @@ use flight::{
     ActionType, Criteria, Empty, FlightData, FlightDescriptor, FlightInfo, HandshakeRequest,
     HandshakeResponse, PutResult, SchemaResult, Ticket,
 };
+use futures::pin_mut;
 use futures::Stream;
 use tonic::transport::Server;
 use tonic::{Request, Response, Status, Streaming};
@@ -197,17 +202,28 @@ fn to_tonic_err(e: &datafusion::error::ExecutionError) -> Status {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "0.0.0.0:50051".parse()?;
-    let service = FlightServiceImpl {};
+    // let addr = "0.0.0.0:50051".parse()?;
+    // let service = FlightServiceImpl {};
+    //
+    // let svc = FlightServiceServer::new(service);
+    //
+    // println!(
+    //     "Ballista v{} Rust Executor listening on {:?}",
+    //     BALLISTA_VERSION, addr
+    // );
+    //
+    // Server::builder().add_service(svc).serve(addr).await?;
 
-    let svc = FlightServiceServer::new(service);
+    let data = DataExec { batches: vec![] };
+    let projection = ProjectionExec { input: data };
 
-    println!(
-        "Ballista v{} Rust Executor listening on {:?}",
-        BALLISTA_VERSION, addr
-    );
+    let mut stream = projection.execute().unwrap();
 
-    Server::builder().add_service(svc).serve(addr).await?;
+    pin_mut!(stream); // needed for iteration
+
+    while let Some(value) = stream.next().await {
+        println!("got {}", value);
+    }
 
     Ok(())
 }

@@ -11,6 +11,9 @@ pub const BALLISTA_VERSION: &'static str = env!("CARGO_PKG_VERSION");
 pub mod client;
 pub mod cluster;
 pub mod dataframe;
+
+pub mod execution;
+
 pub mod error;
 pub mod logicalplan;
 pub mod plan;

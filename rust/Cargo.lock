@@ -182,6 +182,7 @@ version = "0.2.0-alpha-3"
 dependencies = [
  "arrow",
  "arrow-flight",
+ "async-stream",
  "datafusion",
  "env_logger",
  "flatbuffers",
