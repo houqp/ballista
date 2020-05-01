@@ -96,6 +96,7 @@ class ReaderIterator(private val schema: Schema,
             // find field delimiters
             var i=0
             fieldSeparators.clear()
+            fieldSeparators.add(0) // first field starts at zero offset
             while (i<line.length) {
                 //TODO handle strings, escaped quotes, etc
                 if (line[i] == ',') {
