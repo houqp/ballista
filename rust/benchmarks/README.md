@@ -5,12 +5,12 @@
 To run for a single month (single thread).
 
 ```bash
-cargo run --release -- --mode local --path /mnt/nyctaxi/yellow_tripdata_2019-01.csv
+cargo run --release -- --mode local --path /mnt/nyctaxi/csv/2019/yellow_tripdata_2019-01.csv
 ```
 
 To run for multiple files (one thread per file).
 ```bash
-cargo run --release -- --mode local --path /mnt/nyctaxi/
+cargo run --release -- --mode local --path /mnt/nyctaxi/csv/2019
 ```
 
 ## Kubernetes

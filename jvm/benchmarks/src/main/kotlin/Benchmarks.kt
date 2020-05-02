@@ -10,7 +10,7 @@ import kotlin.system.measureTimeMillis
 
 fun main() {
 
-    val path = "/mnt/nyctaxi/"
+    val path = "/mnt/nyctaxi/csv"
 
     sqlAggregate(path, 1)
 
